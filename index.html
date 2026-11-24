@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quantrex • Agents, Bids, Leads &amp; Scorecard</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-alt: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --accent: #0284c7;
+      --accent-soft: #e0f2fe;
+      --green: #16a34a;
+      --green-soft: #dcfce7;
+      --amber: #d97706;
+      --amber-soft: #fef3c7;
+      --red: #dc2626;
+      --red-soft: #fee2e2;
+      --purple: #7c3aed;
+      --purple-soft: #ede9fe;
+      --radius: 8px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.5;
+      padding-bottom: 4rem;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 2rem;
+    }
+
+    .header-inner {
+      max-width: 1360px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .logo-badge {
+      background: #0f172a;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 1rem;
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+    }
+
+    .brand h1 { font-size: 1.25rem; font-weight: 700; }
+    .brand p { font-size: 0.82rem; color: var(--text-muted); }
+
+    .header-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .pill {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .nav-tabs {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    main {
+      max-width: 1360px;
+      margin: 1.5rem auto;
+      padding: 0 2rem;
+    }
+
+    .section-block { margin-bottom: 2.5rem; }
+    .section-block.hidden { display: none; }
+
+    h2 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .subtext { font-size: 0.84rem; color: var(--text-muted); margin-bottom: 1rem; }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.9rem 1rem;
+    }
+
+    .kpi-val { font-size: 1.5rem; font-weight: 700; line-height: 1.2; }
+    .kpi-lbl { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.15rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.74rem;
+      font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: 5px;
+    }
+
+    .b-amber { background: var(--amber-soft); color: var(--amber); }
+    .b-green { background: var(--green-soft); color: var(--green); }
+    .b-red { background: var(--red-soft); color: var(--red); }
+    .b-blue { background: var(--accent-soft); color: var(--accent); }
+    .b-purple { background: var(--purple-soft); color: var(--purple); }
+    .b-muted { background: var(--surface-alt); color: var(--text-muted); border: 1px solid var(--border); }
+
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      align-items: center;
+    }
+
+    .filter-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    .filter-btn.active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 1.25rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+      text-align: left;
+    }
+
+    th {
+      background: var(--surface-alt);
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 0.65rem 0.9rem;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 0.65rem 0.9rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .action-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .action-list li {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--amber);
+      border-radius: var(--radius);
+      padding: 0.75rem 1rem;
+      font-size: 0.86rem;
+    }
+
+    .action-list li.due { border-left-color: var(--red); }
+
+    .cli {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.76rem;
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      padding: 0.35rem 0.6rem;
+      border-radius: 5px;
+      margin-top: 0.45rem;
+      display: inline-block;
+    }
+
+    .dl-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+
+    .dl-tag {
+      font-size: 0.75rem;
+      background: var(--accent-soft);
+      color: var(--accent);
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .btn-verdict {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      padding: 0.25rem 0.55rem;
+      border-radius: 5px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-right: 0.25rem;
+    }
+
+    .btn-verdict.active-bid { background: var(--green-soft); border-color: var(--green); color: var(--green); }
+    .btn-verdict.active-skip { background: var(--red-soft); border-color: var(--red); color: var(--red); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="logo-badge">QC</div>
+        <div>
+          <h1>Quantrex • Agents Dashboard, Bids, Leads &amp; Scorecard</h1>
+          <p>Quantrex Controls, LLC • Bothell, Washington • Led by Ibrahim Traore</p>
+        </div>
+      </div>
+      <div class="header-meta">
+        <span class="pill">Snapshot: 11/23/2026, 4:18 PM / Updated 16:22</span>
+        <span class="pill"><strong>26</strong> jobs tracked • <strong>5</strong> exercises • <strong>1</strong> passed on • <strong>1</strong> active delivery</span>
+        <span class="pill">Next due: <strong>8d 7h</strong></span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" data-view="all">All Combined</button>
+    <button class="tab-btn" data-view="agents">Agents Dashboard (26 Jobs &amp; Actions)</button>
+    <button class="tab-btn" data-view="bids">Bids &amp; Leads (90)</button>
+    <button class="tab-btn" data-view="scorecard">Agent Scorecard &amp; Verdicts</button>
+  </nav>
+
+  <main>
+    <!-- TOP COMBINED KPI BAR -->
+    <div class="kpi-grid">
+      <div class="kpi-card"><div class="kpi-val">26</div><div class="kpi-lbl">Jobs tracked</div></div>
+      <div class="kpi-card"><div class="kpi-val">5</div><div class="kpi-lbl">Exercises</div></div>
+      <div class="kpi-card"><div class="kpi-val">1</div><div class="kpi-lbl">Passed on</div></div>
+      <div class="kpi-card"><div class="kpi-val">1</div><div class="kpi-lbl">Active delivery</div></div>
+      <div class="kpi-card"><div class="kpi-val">8d 7h</div><div class="kpi-lbl">Next due</div></div>
+      <div class="kpi-card"><div class="kpi-val">9</div><div class="kpi-lbl">Bids That Fit</div></div>
+      <div class="kpi-card"><div class="kpi-val">1</div><div class="kpi-lbl">Bids To Review</div></div>
+      <div class="kpi-card"><div class="kpi-val">0</div><div class="kpi-lbl">Due In 14 Days</div></div>
+      <div class="kpi-card"><div class="kpi-val">11</div><div class="kpi-lbl">Leads To Act On</div></div>
+      <div class="kpi-card"><div class="kpi-val">90</div><div class="kpi-lbl">All Bids Seen</div></div>
+    </div>
+
+    <!-- SECTION 1: NEEDS YOUR ACTION -->
+    <div class="section-block" data-section="agents">
+      <h2>Needs Your Action</h2>
+      <p class="subtext">Mandatory human verification gates and overdue checkpoints flagged by the agents.</p>
+      <ul class="action-list">
+        <li class="due"><span class="badge b-red">Due</span> <strong>SP4706-27-R-0002</strong> Energy Automation Operational Technology Systems (EAOTS) Automated Fuel Handling Equipment Maintenance — overdue (2026-11-16)</li>
+        <li class="due"><span class="badge b-red">Due</span> <strong>KC001738</strong> Cedar Hills Pilot-Scale Micro-Electrolysis — overdue (2026-11-13)</li>
+        <li><span class="badge b-amber">Confirm</span> <strong>KC001738</strong> Confirm that Quantrex's role is controls subcontractor to a prime contractor, which the review marks as <code>[CONTROLS SUBCONTRACTOR TO A PRIME CONTRACTOR: TO BE CONFIRMED]</code>. <em>(Owner)</em></li>
+        <li><span class="badge b-blue">Fill In</span> <strong>KC001738</strong> Enter the Quantrex certification status (YES / NO / EQUAL TO BE APPROVED) against the spec 40 63 43 requirement for an Allen-Bradley (or approved equal) certified industrial controls contractor. <em>(Owner)</em></li>
+        <li><span class="badge b-amber">Confirm</span> <strong>KC001738</strong> Ask the engineer whether spare I/O is 20 percent (spec 40 63 43 and E6.04) or 10 percent for digital and analog (drawing E6.03). <em>(Owner)</em></li>
+        <li><span class="badge b-amber">Confirm</span> <strong>KC001738</strong> Ask how to price the independent commissioning agent that E0.01 requires as a separate price, since the bid schedule has no separate line for it. <em>(Owner)</em></li>
+        <li><span class="badge b-amber">Confirm</span> <strong>KC001738</strong> Have someone read drawing sheets E2.01, E6.01 and E6.02 and the full 420-page specification which the review says were not read in full. <em>(Owner)</em></li>
+      </ul>
+    </div>
+
+    <!-- SECTION 2: SOLICITATIONS & NEW BIDS -->
+    <div class="section-block" data-section="bids agents">
+      <h2>Solicitations &amp; New Bids (9 Fit • 81 Parked)</h2>
+      <p class="subtext">Bids found each morning by the solicitation watcher, and companies found by the prospecting agents.</p>
+
+      <div class="filter-bar" id="sol-filters">
+        <button class="filter-btn active" data-filter="all">All Solicitations (9)</button>
+        <button class="filter-btn" data-filter="actionable">Actionable / Review (6)</button>
+        <button class="filter-btn" data-filter="decline">Sales: Decline (3)</button>
+        <label style="font-size:0.82rem; margin-left:0.5rem; color:var(--text-muted);">
+          <input type="checkbox" id="toggle-parked" /> Show parked note (81 parked in watcher archive)
+        </label>
+      </div>
+      <div id="parked-banner" class="card" style="display:none; background:var(--surface-alt); font-size:0.82rem; color:var(--text-muted);">
+        81 low-fit or non-controls solicitations are archived/parked by the solicitation watcher and excluded from the 9 fit bids below.
+      </div>
+
+      <div class="card sol-item" data-cat="actionable">
+        <span class="badge b-amber">Ask Questions First</span> <span class="badge b-blue">Fit: 7</span> <span class="badge b-muted">Due: Check portal</span>
+        <div style="font-weight:700; margin:0.35rem 0;">RFP#6645-26 · Executed Attachment 3 NDA – Request for Pre-Bid Technical Records | RFP #6645-26 (CSO 24, 26 Storage and Springfield Lift Station SCADA Upgrade)</div>
+        <div style="font-size:0.8rem; color:var(--text-muted);">Other agency email • Found 2026-11-23 15:58 • Tags: scada; controls; lift station • Folder: <code>solicitations\RFP_6645-26</code></div>
+        <div class="dl-row"><span class="dl-tag">↓ Sales brief</span></div>
+      </div>
+
+      <div class="card sol-item" data-cat="actionable">
+        <span class="badge b-amber">Ask Questions First</span> <span class="badge b-blue">Fit: 6</span> <span class="badge b-red">Due: 2026-11-16</span>
+        <div style="font-weight:700; margin:0.35rem 0;">SP4706-27-R-0002 · Energy Automation Operational Technology Systems (EAOTS) Automated Fuel Handling Equipment Maintenance</div>
+        <div style="font-size:0.8rem; color:var(--text-muted);">SAM.gov (federal) • Found 2026-11-21 16:01 • Tags: automation; operational technology • Folder: <code>solicitations\SP4706-27-R-0002</code></div>
+        <div class="dl-row"><span class="dl-tag">↓ Sales brief</span></div>
+      </div>
+
+      <div class="card sol-item" data-cat="actionable">
+        <span class="badge b-blue">Documents Needed</span> <span class="badge b-blue">Fit: 4</span> <span class="badge b-green">Due: 2026-12-09 (17 days left)</span>
+        <div style="font-weight:700; margin:0.35rem 0;">H1bdb781488 · St John Wastewater treatment plant replacement 12/09/26</div>
+        <div style="font-size:0.8rem; color:var(--text-muted);">OMWBE bid board (many WA agencies) • Found 2026-11-21 14:34 • Tags: treatment plant; wastewater • Folder: <code>solicitations\H1bdb781488</code></div>
+        <div class="dl-row">
+          <span class="dl-tag">↓ DRAFT (notice only): Bid package: Tier 1 scope letter + quote (zip)</span>
+          <span class="dl-tag">↓ Sales brief</span>
+          <span class="dl-tag">↓ Checklist</span>
+          <span class="dl-tag">↓ DRAFT (notice only): Tier 2 on request (zip)</span>
+        </div>
+        <div class="cli">Tier 3 not built: run python solicitation_watch.py --tier3 H1bdb781488</div>
+      </div>
+
+      <div class="card sol-item" data-cat="actionable">
+        <span class="badge b-amber">Ask Questions First</span> <span class="badge b-blue">Fit: 4</span> <span class="badge b-green">Due: 2026-12-09 (17 days left)</span>
+        <div style="font-weight:700; margin:0.35rem 0;">H6033896588 · Town of St. John, Washington - Wastewater Treatment Plant Replacement Project 12/09/26</div>
+        <div style="font-size:0.8rem; color:var(--text-muted);">OMWBE bid board (many WA agencies) • Found 2026-11-21 01:15 • Tags: treatment plant; wastewater • Folder: <code>solicitations\H6033896588</code></div>
+        <div class="dl-row"><span class="dl-tag">↓ Sales brief</span></div>
+      </div>
+
+      <div class="card sol-item" data-cat="decline">
+        <span class="badge b-red">Sales: Decline</span> <span class="badge b-blue">Fit: 6</span> <span class="badge b-muted">Due: Check portal</span>
+        <div style="font-weight:700; margin:0.35rem 0;">RFP26-125-SON-CALL · Re: Exploring sub-contracting Partnership | SPU RFP 26-125-SOn-Call Capital Project Controls &amp; Performance Management Services</div>
+        <div style="font-size:0.8rem; color:var(--text-muted);">Other agency email (askenergyinc.com) • Found 2026-11-21 00:47 • Tags: plc; controls • Folder: <code>solicitations\RFP26-125-SON-CALL</code></div>
+        <div class="dl-row"><span class="dl-tag">↓ Sales brief</span></div>
+      </div>
+
+      <div class="card sol-item" data-cat="decline">
+        <span class="badge b-red">Sales: Decline</span> <span class="badge b-blue">Fit: 6</span> <span class="badge b-muted">Due: Check portal</span>
+        <div style="font-weight:700; margin:0.35rem 0;">RFP26-125-SON-CALL · Re: Exploring sub-contracting Partnership | SPU RFP 26-125-SOn-Call Capital Project Controls &amp; Performance Management Services</div>
+        <div style="font-size:0.8rem; color:var(--text-muted);">Other agency email (pivotalconsults.com) • Found 2026-11-21 00:47 • Tags: plc; controls • Folder: <code>solicitations\RFP26-125-SON-CALL</code></div>
+        <div class="dl-row"><span class="dl-tag">↓ Sales brief</span></div>
+      </div>
+
+      <div class="card sol-item" data-cat="decline">
+        <span class="badge b-red">Sales: Decline</span> <span class="badge b-blue">Fit: 6</span> <span class="badge b-muted">Due: Check portal</span>
+        <div style="font-weight:700; margin:0.35rem 0;">RFP26-125-SON-CALL · RE: Exploring sub-contracting Partnership | SPU RFP 26-125-SOn-Call Capital Project Controls &amp; Performance Management Services</div>
+        <div style="font-size:0.8rem; color:var(--text-muted);">Other agency email (arcadis.com) • Found 2026-11-21 00:47 • Tags: plc; controls • Folder: <code>solicitations\RFP26-125-SON-CALL</code></div>
+        <div class="dl-row"><span class="dl-tag">↓ Sales brief</span></div>
+      </div>
+
+      <div class="card sol-item" data-cat="actionable">
+        <span class="badge b-green">Package Ready</span> <span class="badge b-blue">Fit: 26</span> <span class="badge b-red">Due: 2026-11-13</span>
+        <div style="font-weight:700; margin:0.35rem 0;">KC001738 · CLIENT: King County Department of Natural Resources and Parks, Solid Waste Division (Contract Specialist Annette Hansford, ahansford@kingcounty.gov)</div>
+        <div style="font-size:0.8rem; color:var(--text-muted);">King County • Found 2026-11-18 19:51 • Tags: scada; plc; hmi; control system; controls; instrumentation; allen-bradley; electrical; wastewater; water; network • Folder: <code>solicitations\KC001738</code></div>
+        <div class="dl-row">
+          <span class="dl-tag">↓ Bid package (zip)</span>
+          <span class="dl-tag">↓ Sales brief</span>
+          <span class="dl-tag">↓ Checklist</span>
+        </div>
+      </div>
+
+      <div class="card sol-item" data-cat="actionable">
+        <span class="badge b-red">Agent Failed</span> <span class="badge b-blue">Fit: 9</span> <span class="badge b-muted">Closed: 2025-08-20</span>
+        <div style="font-weight:700; margin:0.35rem 0;">KC001455 · KING COUNTY SOLICITATION KC001455 - public listing summary (closed; practice exercise)</div>
+        <div style="font-size:0.8rem; color:var(--text-muted);">King County • Found 2026-11-18 19:31 • Tags: scada; automation; rockwell; electrical • Folder: <code>solicitations\KC001455</code></div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: PROSPECT LEADS -->
+    <div class="section-block" data-section="bids agents">
+      <h2>Prospect Leads and Email Drafts (11)</h2>
+      <p class="subtext">Market triggers identified by the prospecting pipeline (<code>run_prospecting.py</code>).</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Found</th>
+              <th>Source</th>
+              <th>Title</th>
+              <th>Score</th>
+              <th>Why / Tags</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>2026-11-23 10:16</td><td>News: wastewater plants (Washington)</td><td>Construction at wastewater treatment plant in Stow causing sewer smell - Yahoo</td><td><strong>4</strong></td><td>treatment plant; wastewater (Wed, 11 Nov 2026)</td><td><span class="badge b-blue">New</span></td></tr>
+            <tr><td>2026-11-22 19:58</td><td>News: wastewater plants (Washington)</td><td>Sioux City receives $292.4M low bid for wastewater treatment plant improvements - Sioux City Journal</td><td><strong>4</strong></td><td>treatment plant; wastewater (Wed, 11 Nov 2026)</td><td><span class="badge b-blue">New</span></td></tr>
+            <tr><td>2026-11-22 19:58</td><td>News: wastewater plants (Washington)</td><td>Aqaba-Amman Water Project Breaks Ground at $6.7bn in Jordan - Construction Review</td><td><strong>3</strong></td><td>breaks ground (Mon, 23 Nov 2026)</td><td><span class="badge b-blue">New</span></td></tr>
+            <tr><td>2026-11-22 14:33</td><td>News: wastewater plants (Washington)</td><td>Winter Garden Gets $9.6M for Wastewater Plant Expansion - Hoodline</td><td><strong>4</strong></td><td>expansion; wastewater (Fri, 13 Nov 2026)</td><td><span class="badge b-blue">New</span></td></tr>
+            <tr><td>2026-11-22 14:33</td><td>News: food processing expansion (Pacific NW)</td><td>MDARD, MI Ag Commission Award Funding for Corn Processing Facility Rehabilitation, Expansion - EIN News</td><td><strong>3</strong></td><td>expansion; processing (Wed, 18 Nov 2026)</td><td><span class="badge b-blue">New</span></td></tr>
+            <tr><td>2026-11-21 17:52</td><td>News: wastewater plants (Washington)</td><td>Sioux City Wastewater Treatment Plant project goes to Fargo Contractor - KCAU 9 News</td><td><strong>4</strong></td><td>treatment plant; wastewater (Mon, 09 Nov 2026)</td><td><span class="badge b-blue">New</span></td></tr>
+            <tr><td>2026-11-21 17:52</td><td>News: wastewater plants (Washington)</td><td>Manatee County Breaks Ground on Wastewater Plant Upgrade to 18 Million Gallons a Day - Hoodline</td><td><strong>6</strong></td><td>breaks ground; upgrade; wastewater (Fri, 20 Nov 2026)</td><td><span class="badge b-green">New</span></td></tr>
+            <tr><td>2026-11-21 17:52</td><td>News: water treatment (WA, OR, ID)</td><td>Water Treatment Plant Opening [Image 1 of 6] - DVIDS</td><td><strong>4</strong></td><td>treatment plant; water treatment (Wed, 18 Nov 2026)</td><td><span class="badge b-blue">New</span></td></tr>
+            <tr><td>2026-11-21 17:52</td><td>News: water treatment (WA, OR, ID)</td><td>Vacaville council accepts Fairfield's initial work on water treatment plant expansion - Daily Republic</td><td><strong>6</strong></td><td>expansion; treatment plant; water treatment (Sat, 14 Nov 2026)</td><td><span class="badge b-green">New</span></td></tr>
+            <tr><td>2026-11-21 17:52</td><td>News: new manufacturing plants (Washington)</td><td>CNH Breaks Ground at its New Manufacturing Facility in UP Strengthening India's Role as a Global Manufacturing Hub - Global Ag Tech Initiative</td><td><strong>3</strong></td><td>breaks ground (Thu, 12 Nov 2026)</td><td><span class="badge b-blue">New</span></td></tr>
+            <tr><td>2026-11-21 17:52</td><td>News: new manufacturing plants (Washington)</td><td>GlobalFoundries breaks ground on first new semiconductor fab under landmark U.S.-Japan initiative - The Manila Times</td><td><strong>3</strong></td><td>breaks ground (Fri, 13 Nov 2026)</td><td><span class="badge b-blue">New</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION 4: AGENT SCORECARD & VERDICTS -->
+    <div class="section-block" data-section="scorecard">
+      <h2>Agent Scorecard • Last 7 Days &amp; All-Time Metrics</h2>
+      <p class="subtext">Human-in-the-loop calibration and accuracy tracking for <code>watch_config.json</code>.</p>
+
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-val">90</div><div class="kpi-lbl">Bids Seen</div></div>
+        <div class="kpi-card"><div class="kpi-val">9</div><div class="kpi-lbl">Fit Quantrex</div></div>
+        <div class="kpi-card"><div class="kpi-val">1</div><div class="kpi-lbl">Sales Said Bid</div></div>
+        <div class="kpi-card"><div class="kpi-val" style="color:var(--green)">100%</div><div class="kpi-lbl">You Agreed (Of 1 Judged)</div></div>
+        <div class="kpi-card"><div class="kpi-val">0</div><div class="kpi-lbl">Missed (Should Have Bid)</div></div>
+        <div class="kpi-card"><div class="kpi-val">0</div><div class="kpi-lbl">Wrong Bids (Should Have Skipped)</div></div>
+        <div class="kpi-card"><div class="kpi-val" style="color:var(--amber)">9 / 9</div><div class="kpi-lbl">Fit Decided From Title Only</div></div>
+        <div class="kpi-card"><div class="kpi-val">1</div><div class="kpi-lbl">Packages Built</div></div>
+        <div class="kpi-card"><div class="kpi-val">0</div><div class="kpi-lbl">Packages You Sent</div></div>
+        <div class="kpi-card"><div class="kpi-val">1</div><div class="kpi-lbl">Held: Documents Needed</div></div>
+        <div class="kpi-card"><div class="kpi-val">8</div><div class="kpi-lbl">Duplicates, Replies, Events</div></div>
+        <div class="kpi-card"><div class="kpi-val" style="color:var(--red)">1</div><div class="kpi-lbl">Errors</div></div>
+      </div>
+
+      <div class="card">
+        <div style="font-weight:700; margin-bottom:0.25rem;">Suggested Changes (you approve and edit <code>watch_config.json</code> yourself)</div>
+        <div id="suggestion-msg" style="font-size:0.84rem; color:var(--text-muted); margin-bottom:0.4rem;">Not enough corrections yet. Suggestions appear after 3 'Should have bid' / 'Should have skipped' clicks.</div>
+        <div style="font-size:0.84rem;"><strong>Corrections you made:</strong> <span id="corrections-text">Nothing here yet. Click verdict buttons below to simulate human-in-the-loop feedback.</span></div>
+      </div>
+
+      <h3 style="font-size:1rem; margin:1.25rem 0 0.5rem;">Fit Bids Waiting for Your Verdict (8)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Number</th>
+              <th>Title</th>
+              <th>Status</th>
+              <th>Based On</th>
+              <th>Your Call</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>RFP#6645-26</strong></td><td>Executed Attachment 3 NDA – Request for Pre-Bid Technical Records | RFP #6645-26 (CSO 24, 26 Storage and Springfield Lift Station SCADA Upgrade)</td><td><span class="badge b-amber">Ask Questions First (Fit: 7)</span></td><td>Title Only</td><td><button class="btn-verdict" data-id="RFP#6645-26" data-v="Should have bid">Should have bid</button><button class="btn-verdict" data-id="RFP#6645-26" data-v="Should have skipped">Should have skipped</button></td></tr>
+            <tr><td><strong>SP4706-27-R-0002</strong></td><td>Energy Automation Operational Technology Systems (EAOTS) Automated Fuel Handling Equipment Maintenance</td><td><span class="badge b-amber">Ask Questions First (Fit: 6)</span></td><td>Title Only</td><td><button class="btn-verdict" data-id="SP4706-27-R-0002" data-v="Should have bid">Should have bid</button><button class="btn-verdict" data-id="SP4706-27-R-0002" data-v="Should have skipped">Should have skipped</button></td></tr>
+            <tr><td><strong>H1bdb781488</strong></td><td>St John Wastewater treatment plant replacement 12/09/26</td><td><span class="badge b-blue">Documents Needed (Fit: 4)</span></td><td>Title Only</td><td><button class="btn-verdict" data-id="H1bdb781488" data-v="Should have bid">Should have bid</button><button class="btn-verdict" data-id="H1bdb781488" data-v="Should have skipped">Should have skipped</button></td></tr>
+            <tr><td><strong>H6033896588</strong></td><td>Town of St. John, Washington - Wastewater Treatment Plant Replacement Project 12/09/26</td><td><span class="badge b-amber">Ask Questions First (Fit: 4)</span></td><td>Title Only</td><td><button class="btn-verdict" data-id="H6033896588" data-v="Should have bid">Should have bid</button><button class="btn-verdict" data-id="H6033896588" data-v="Should have skipped">Should have skipped</button></td></tr>
+            <tr><td><strong>RFP26-125-SON-CALL</strong></td><td>Re: Exploring sub-contracting Partnership | SPU RFP 26-125-SOn-Call (askenergyinc.com)</td><td><span class="badge b-red">Sales: Decline (Fit: 6)</span></td><td>Title Only</td><td><button class="btn-verdict" data-id="RFP26-125-SON-CALL (1)" data-v="Should have bid">Should have bid</button><button class="btn-verdict" data-id="RFP26-125-SON-CALL (1)" data-v="Should have skipped">Should have skipped</button></td></tr>
+            <tr><td><strong>RFP26-125-SON-CALL</strong></td><td>Re: Exploring sub-contracting Partnership | SPU RFP 26-125-SOn-Call (pivotalconsults.com)</td><td><span class="badge b-red">Sales: Decline (Fit: 6)</span></td><td>Title Only</td><td><button class="btn-verdict" data-id="RFP26-125-SON-CALL (2)" data-v="Should have bid">Should have bid</button><button class="btn-verdict" data-id="RFP26-125-SON-CALL (2)" data-v="Should have skipped">Should have skipped</button></td></tr>
+            <tr><td><strong>RFP26-125-SON-CALL</strong></td><td>RE: Exploring sub-contracting Partnership | SPU RFP 26-125-SOn-Call (arcadis.com)</td><td><span class="badge b-red">Sales: Decline (Fit: 6)</span></td><td>Title Only</td><td><button class="btn-verdict" data-id="RFP26-125-SON-CALL (3)" data-v="Should have bid">Should have bid</button><button class="btn-verdict" data-id="RFP26-125-SON-CALL (3)" data-v="Should have skipped">Should have skipped</button></td></tr>
+            <tr><td><strong>KC001455</strong></td><td>KING COUNTY SOLICITATION KC001455 - public listing summary (closed; practice exercise)</td><td><span class="badge b-red">Agent Failed (Fit: 9)</span></td><td>Title Only</td><td><button class="btn-verdict" data-id="KC001455" data-v="Should have bid">Should have bid</button><button class="btn-verdict" data-id="KC001455" data-v="Should have skipped">Should have skipped</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="font-size:1rem; margin:1.25rem 0 0.5rem;">Flagged: Duplicates, Replies, Events (8)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Number</th>
+              <th>Title</th>
+              <th>Flag</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>RFP26-125-SON-CALL</strong></td><td>Re: Exploring sub-contracting Partnership | SPU RFP 26-125-SOn-Call (askenergyinc.com)</td><td><span class="badge b-muted">Partner Reply / Thread</span></td></tr>
+            <tr><td><strong>RFP26-125-SON-CALL</strong></td><td>Re: Exploring sub-contracting Partnership | SPU RFP 26-125-SOn-Call (pivotalconsults.com)</td><td><span class="badge b-muted">Duplicate / Partner Reply</span></td></tr>
+            <tr><td><strong>RFP26-125-SON-CALL</strong></td><td>RE: Exploring sub-contracting Partnership | SPU RFP 26-125-SOn-Call (arcadis.com)</td><td><span class="badge b-muted">Duplicate / Partner Reply</span></td></tr>
+            <tr><td><strong>H6033896588</strong></td><td>Town of St. John, Washington - Wastewater Treatment Plant Replacement Project 12/09/26</td><td><span class="badge b-muted">Duplicate Listing (matches H1bdb781488)</span></td></tr>
+            <tr><td><strong>RFP#6645-26</strong></td><td>Executed Attachment 3 NDA – Request for Pre-Bid Technical Records</td><td><span class="badge b-muted">Reply / NDA Event</span></td></tr>
+            <tr><td><strong>KC001455</strong></td><td>KING COUNTY SOLICITATION KC001455 - public listing summary</td><td><span class="badge b-muted">Closed / Practice Event</span></td></tr>
+            <tr><td><strong>solicitation_RFP26-125-SON-CALL_listing</strong></td><td>Auto-detected listing file from agent files</td><td><span class="badge b-muted">Duplicate File</span></td></tr>
+            <tr><td><strong>sales_input_22076A</strong></td><td>Auto-detected sales input companion to 22076A</td><td><span class="badge b-muted">Companion / Event File</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION 5: JOB LOG, DECISIONS & AGENT TEAM -->
+    <div class="section-block" data-section="agents">
+      <h2>Job Log (26 Tracked)</h2>
+      <p class="subtext">Every solicitation and project the agents have worked on. Rows with a due date are live bids.</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Job</th>
+              <th>Client / Type</th>
+              <th>Quantrex Role</th>
+              <th>Decision &amp; Due</th>
+              <th>Scorecard &amp; Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>RFP#6645-26</strong></td><td>CSO 24, 26 Storage and Springfield Lift Station SCADA Upgrade<br><small style="color:var(--text-muted)">Other agency email</small></td><td>Solicitation (watcher)</td><td><span class="badge b-blue">New</span></td><td>Sales says ask questions first. Read the brief; build the package by hand when ready. Fit score 7 • 17 files (19 min ago)</td></tr>
+            <tr><td><strong>SP4706-27-R-0002</strong></td><td>EAOTS Automated Fuel Handling Equipment Maintenance<br><small style="color:var(--text-muted)">SAM.gov (federal)</small></td><td>Solicitation (watcher)</td><td><span class="badge b-blue">New</span><br><small style="color:var(--red)">2026-11-16 (overdue)</small></td><td>Sales says ask questions first. Read the brief; build the package by hand when ready. Fit score 6 • 1 file (11/21/2026)</td></tr>
+            <tr><td><strong>H1bdb781488</strong></td><td>St John Wastewater treatment plant replacement 12/09/26<br><small style="color:var(--text-muted)">OMWBE bid board</small></td><td>Solicitation (watcher)</td><td><span class="badge b-blue">New</span><br><small style="color:var(--green)">2026-12-09 (16d 7h left)</small></td><td>Fits, but the bid documents could not be downloaded. Save them in folder\solicitation_docs, then run the watch. Fit score 4 • 6 files (11/21/2026)</td></tr>
+            <tr><td><strong>H6033896588</strong></td><td>Town of St. John, WA - Wastewater Treatment Plant Replacement<br><small style="color:var(--text-muted)">OMWBE bid board</small></td><td>Solicitation (watcher)</td><td><span class="badge b-blue">New</span><br><small style="color:var(--green)">2026-12-09 (16d 7h left)</small></td><td>Sales says ask questions first. Read the brief; build the package by hand when ready. Fit score 4 • 1 file (11/21/2026)</td></tr>
+            <tr><td><strong>solicitation_RFP26-125-SON-CALL_listing</strong></td><td>New (auto-detected)</td><td>—</td><td><span class="badge b-blue">New</span></td><td>Detected from agent files • 11/21/2026</td></tr>
+            <tr><td><strong>KC001738</strong></td><td>Cedar Hills Pilot-Scale Micro-Electrolysis<br><small style="color:var(--text-muted)">King County • ITB (construction)</small></td><td>Controls subcontractor to a prime</td><td><span class="badge b-purple">Exercise</span><br><small style="color:var(--red)">2026-11-13 (overdue)</small></td><td>Intake built. Six documents generated on the PC on Nov 9 • 93 files (11/18/2026)</td></tr>
+            <tr><td><strong>KC001455</strong></td><td>SCADA technical services<br><small style="color:var(--text-muted)">King County Solid Waste • Solicitation (closed Aug 2025)</small></td><td>Practice</td><td><span class="badge b-amber">Practice</span></td><td>Sales brief drafted. Full intake run not confirmed • 18 files (11/18/2026)</td></tr>
+            <tr><td><strong>22076A</strong></td><td>New (auto-detected)</td><td>—</td><td><span class="badge b-blue">New</span></td><td>Detected from agent files • 11/15/2026</td></tr>
+            <tr><td><strong>sales_input_22076A</strong></td><td>New (auto-detected)</td><td>—</td><td><span class="badge b-blue">New</span></td><td>Detected from agent files • 11/15/2026</td></tr>
+            <tr><td><strong>KC001711</strong></td><td>New (auto-detected)</td><td>—</td><td><span class="badge b-blue">New</span></td><td>Detected from agent files • 11/15/2026</td></tr>
+            <tr><td><strong>KC001711_BUILD</strong></td><td>New (auto-detected)</td><td>—</td><td><span class="badge b-blue">New</span></td><td>Detected from agent files • 11/14/2026</td></tr>
+            <tr><td><strong>ALL_PROJECTS</strong></td><td>New (auto-detected)</td><td>—</td><td><span class="badge b-blue">New</span></td><td>Detected from agent files • 11/12/2026</td></tr>
+            <tr><td><strong>Solicitation_PW0508-2026_SPL_L2</strong></td><td>New (auto-detected)</td><td>—</td><td><span class="badge b-blue">New</span></td><td>Detected from agent files • 11/11/2026</td></tr>
+            <tr><td><strong>Solicitation_00322937_ATR</strong></td><td>New (auto-detected)</td><td>—</td><td><span class="badge b-blue">New</span></td><td>Detected from agent files • 11/10/2026</td></tr>
+            <tr><td><strong>details.example</strong></td><td>New (auto-detected)</td><td>—</td><td><span class="badge b-blue">New</span></td><td>Detected from agent files • 11/10/2026</td></tr>
+            <tr><td><strong>HMI-Upgrade</strong></td><td>HMI upgrade project<br><small style="color:var(--text-muted)">Client to be named • Project</small></td><td>Delivery</td><td><span class="badge b-green">Active</span></td><td>20-document set and project management plan built • 42 files (11/10/2026)</td></tr>
+            <tr><td><strong>KC001388</strong></td><td>Practice solicitation<br><small style="color:var(--text-muted)">King County • Solicitation (closed)</small></td><td>Practice</td><td><span class="badge b-purple">Exercise</span></td><td>Exercise zip prepared • 12 files (11/9/2026)</td></tr>
+            <tr><td><strong>client_message</strong></td><td>New (auto-detected)</td><td>—</td><td><span class="badge b-blue">New</span></td><td>Detected from agent files • 11/9/2026</td></tr>
+            <tr><td><strong>hmi_project</strong></td><td>New (auto-detected)</td><td>—</td><td><span class="badge b-blue">New</span></td><td>Detected from agent files • 11/9/2026</td></tr>
+            <tr><td><strong>growth</strong></td><td>New (auto-detected)</td><td>—</td><td><span class="badge b-blue">New</span></td><td>Detected from agent files • 11/9/2026</td></tr>
+            <tr><td><strong>intake</strong></td><td>New (auto-detected)</td><td>—</td><td><span class="badge b-blue">New</span></td><td>Detected from agent files • 11/9/2026</td></tr>
+            <tr><td><strong>details</strong></td><td>New (auto-detected)</td><td>—</td><td><span class="badge b-blue">New</span></td><td>Detected from agent files • 11/7/2026</td></tr>
+            <tr><td><strong>draft</strong></td><td>New (auto-detected)</td><td>—</td><td><span class="badge b-blue">New</span></td><td>Detected from agent files • 11/7/2026</td></tr>
+            <tr><td><strong>SEA-UCSS-RFI</strong></td><td>Customer service RFI<br><small style="color:var(--text-muted)">City of Seattle • RFI</small></td><td>Practice</td><td><span class="badge b-purple">Exercise</span></td><td>Exercise zip prepared</td></tr>
+            <tr><td><strong>2026-11228</strong></td><td>Downtown Charging and Layover Facility design<br><small style="color:var(--text-muted)">Spokane Transit Authority • RFQ</small></td><td>Controls subconsultant to a prime</td><td><span class="badge b-purple">Exercise</span><br><small style="color:var(--amber)">2026-12-01 (8d 7h left)</small></td><td>Checklist tracker and proposal draft built</td></tr>
+            <tr><td><strong>IFB-2705-ADM</strong></td><td>HQ Mechanical Maintenance Services<br><small style="color:var(--text-muted)">Washington Dept. of Ecology • IFB</small></td><td>None</td><td><span class="badge b-red">Pass</span><br><small>2026-12-11</small></td><td>Needs a Washington licensed mechanical contractor</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Jobs by Decision</h2>
+      <p class="subtext">Distribution across 26 tracked items</p>
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-val">19</div><div class="kpi-lbl">New</div></div>
+        <div class="kpi-card"><div class="kpi-val">4</div><div class="kpi-lbl">Exercise</div></div>
+        <div class="kpi-card"><div class="kpi-val">1</div><div class="kpi-lbl">Practice</div></div>
+        <div class="kpi-card"><div class="kpi-val">1</div><div class="kpi-lbl">Active</div></div>
+        <div class="kpi-card"><div class="kpi-val">1</div><div class="kpi-lbl">Pass</div></div>
+      </div>
+
+      <h2>The Agent Team (13 Agents)</h2>
+      <p class="subtext">Pipeline stages and deterministic/drafted deliverables</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Agent</th><th>Stage</th><th>Produces</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>OT Scoper</strong></td><td>Intake pipeline</td><td>Technical scope of the inquiry</td></tr>
+            <tr><td><strong>Cyber Matcher</strong></td><td>Intake pipeline</td><td>OT assessment and risk data</td></tr>
+            <tr><td><strong>PMP Scaffolder</strong></td><td>Intake pipeline</td><td>Project plan data</td></tr>
+            <tr><td><strong>Sales</strong></td><td>Business agent</td><td>Sales brief + bid/no-bid scorecard</td></tr>
+            <tr><td><strong>Growth</strong></td><td>Business agent</td><td>Growth draft for review</td></tr>
+            <tr><td><strong>Case study</strong></td><td>Business agent</td><td>Case study draft for review</td></tr>
+            <tr><td><strong>Support</strong></td><td>Business agent</td><td>Support draft for review</td></tr>
+            <tr><td><strong>Compliance</strong></td><td>Business agent</td><td>Bid package check and action list</td></tr>
+            <tr><td><strong>Solicitation watcher</strong></td><td>Solicitation pipeline</td><td>New bids from the portals each morning, scored and screened</td></tr>
+            <tr><td><strong>Market research</strong></td><td>Prospecting (<code>run_prospecting.py</code>)</td><td>Market brief with buying triggers</td></tr>
+            <tr><td><strong>ICP</strong></td><td>Prospecting (<code>run_prospecting.py</code>)</td><td>Ideal customer scoring rubric</td></tr>
+            <tr><td><strong>Prospect</strong></td><td>Prospecting (<code>run_prospecting.py</code>)</td><td>Lead tracker with trigger and proof for each lead</td></tr>
+            <tr><td><strong>Email</strong></td><td>Prospecting (<code>run_prospecting.py</code>)</td><td>Personalized email drafts in Outlook for review</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>How to Run a Job</h2>
+      <p class="subtext">CLI entry points for intake, business analysis, and bid/no-bid scoring</p>
+      <div class="card">
+        <div class="cli">$ python run_intake.py KC001738\intake_KC001738.txt</div><br>
+        <div class="cli">$ python run_business.py sales Solicitation.txt</div><br>
+        <div class="cli">$ python bid_nobid.py scorecard.json</div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Top view switcher (default shows all sections combined)
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const view = btn.dataset.view;
+        document.querySelectorAll('.section-block').forEach(sec => {
+          if (view === 'all' || sec.dataset.section.includes(view)) {
+            sec.classList.remove('hidden');
+          } else {
+            sec.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    // Solicitation filter buttons
+    document.querySelectorAll('#sol-filters .filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#sol-filters .filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const f = btn.dataset.filter;
+        document.querySelectorAll('.sol-item').forEach(item => {
+          item.style.display = (f === 'all' || item.dataset.cat === f) ? 'block' : 'none';
+        });
+      });
+    });
+
+    // Show parked checkbox
+    document.getElementById('toggle-parked').addEventListener('change', (e) => {
+      document.getElementById('parked-banner').style.display = e.target.checked ? 'block' : 'none';
+    });
+
+    // Interactive verdict buttons
+    const verdicts = {};
+    document.querySelectorAll('.btn-verdict').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        const val = btn.dataset.v;
+        btn.parentElement.querySelectorAll('.btn-verdict').forEach(b => b.classList.remove('active-bid', 'active-skip'));
+        btn.classList.add(val === 'Should have bid' ? 'active-bid' : 'active-skip');
+        verdicts[id] = val;
+        const entries = Object.entries(verdicts);
+        document.getElementById('corrections-text').textContent = entries.map(([k, v]) => `${k}: ${v}`).join(' • ');
+        if (entries.length >= 3) {
+          document.getElementById('suggestion-msg').innerHTML = '<strong style="color:var(--green)">Suggestions ready:</strong> Review recorded verdicts to adjust keyword weights in <code>watch_config.json</code>.';
+        } else {
+          document.getElementById('suggestion-msg').textContent = `Not enough corrections yet (${3 - entries.length} more needed). Suggestions appear after 3 'Should have bid' / 'Should have skipped' clicks.`;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
